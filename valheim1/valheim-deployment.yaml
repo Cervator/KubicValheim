@@ -15,8 +15,7 @@ spec:
         app: valheim1
     spec:
       containers:
-      - image: steamcmd/steamcmd:latest
-        command: ["sh /valheim-config/start_server.sh"]
+      - image: mbround18/valheim:latest
         name: valheim-server
         resources:
           requests:
@@ -24,11 +23,11 @@ spec:
             memory: 4G
         env:
           # Server Parameters
-        - name: SERVER_PORT
-          value: "2456"  # Must be in quotes since it is meant as a value to put into an environment variable
-        - name: SERVER_NAME
+        - name: NAME
           value: KubicValheim
-        - name: SERVER_PASSWORD # Must be at least 5 characters long and must not contain the server name
+        - name: PORT
+          value: "2456"  # Must be in quotes since it is meant as a value to put into an environment variable
+        - name: PASSWORD # Must be at least 5 characters long and must not contain the server name
           valueFrom:
             secretKeyRef:
               name: valheim-secrets
@@ -40,15 +39,14 @@ spec:
           - name: valheim1-port2
             containerPort: 2457
             protocol: UDP
+          - name: valheim1-port3
+            containerPort: 2458
+            protocol: UDP
         volumeMounts:
         - name: valheim-persistent-storage
-          mountPath: /data
+          mountPath: /home/steam/.config/unity3d/IronGate/Valheim
         - name: valheim-config-volume
           mountPath: /valheim-config
-        lifecycle:
-          preStop:
-            exec:
-              command: [ " echo","1",">","/data/server_exit.drp" ]
       volumes:
       - name: valheim-persistent-storage
         persistentVolumeClaim:
@@ -58,5 +56,3 @@ spec:
           sources:
           - configMap:
               name: valheim-player-lists-cm
-          - configMap:
-              name: valheim-startup-script-cm

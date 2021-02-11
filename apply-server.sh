@@ -4,7 +4,6 @@ then
   echo "Going to work with the Valheim server $1";
   kubectl apply -f $1/valheim-pvc.yaml
   kubectl apply -f valheim-player-lists-cm.yaml
-  kubectl apply -f valheim-startup-script-cm.yaml
   echo "Hope you remembered to update the passwords in the secrets file only locally!"
   kubectl apply -f valheim-secrets.yaml
   kubectl apply -f $1/valheim-service.yaml

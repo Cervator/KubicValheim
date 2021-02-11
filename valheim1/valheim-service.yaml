@@ -17,5 +17,10 @@ spec:
       port: 2457
       protocol: UDP
       targetPort: 2457
+    - name: port-3
+      nodePort: 31458
+      port: 2458
+      protocol: UDP
+      targetPort: 2458
   selector:
     app: valheim1
