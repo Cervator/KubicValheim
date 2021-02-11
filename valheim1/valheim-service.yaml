@@ -9,18 +9,18 @@ spec:
   ports:
     - name: port-1
       nodePort: 31456
-      port: 2456
+      port: 31456
       protocol: UDP
-      targetPort: 2456
+      targetPort: 31456
     - name: port-2
       nodePort: 31457
-      port: 2457
+      port: 31457
       protocol: UDP
-      targetPort: 2457
+      targetPort: 31457
     - name: port-3
       nodePort: 31458
-      port: 2458
+      port: 31458
       protocol: UDP
-      targetPort: 2458
+      targetPort: 31458
   selector:
     app: valheim1

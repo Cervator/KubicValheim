@@ -26,7 +26,7 @@ spec:
         - name: NAME
           value: KubicValheim
         - name: PORT
-          value: "2456"  # Must be in quotes since it is meant as a value to put into an environment variable
+          value: "31456"  # Must be in quotes since it is meant as a value to put into an environment variable
         - name: PASSWORD # Must be at least 5 characters long and must not contain the server name
           valueFrom:
             secretKeyRef:
@@ -34,13 +34,13 @@ spec:
               key: serverPass
         ports:
           - name: valheim1-port1
-            containerPort: 2456
+            containerPort: 31456
             protocol: UDP
           - name: valheim1-port2
-            containerPort: 2457
+            containerPort: 31457
             protocol: UDP
           - name: valheim1-port3
-            containerPort: 2458
+            containerPort: 31458
             protocol: UDP
         volumeMounts:
         - name: valheim-persistent-storage
