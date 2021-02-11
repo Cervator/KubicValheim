@@ -37,7 +37,7 @@ spec:
           - name: valheim1-port1
             containerPort: 2456
             protocol: UDP
-          - name: valheim1-port1
+          - name: valheim1-port2
             containerPort: 2457
             protocol: UDP
         volumeMounts:
