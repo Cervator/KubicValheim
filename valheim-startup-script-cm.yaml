@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: valheim-startup-script-cm
+data:
+  start_server.sh: |-
+      #!/bin/bash
+
+      export templdpath=$LD_LIBRARY_PATH
+      export LD_LIBRARY_PATH=/data/linux64:$LD_LIBRARY_PATH
+      export SteamAppId=892970
+
+      mkdir -p /root/.config/unity3d/IronGate/Valheim
+      ln -s /valheim-config/adminlist.txt /root/.config/unity3d/IronGate/Valheim/adminlist.txt
+      ln -s /valheim-config/bannedlist.txt /root/.config/unity3d/IronGate/Valheim/bannedlist.txt
+      ln -s /valheim-config/permittedlist.txt /root/.config/unity3d/IronGate/Valheim/permittedlist.txt
+      ln -s /data/prefs /root/.config/unity3d/IronGate/Valheim/prefs
+      ln -s /data/worlds /root/.config/unity3d/IronGate/Valheim/worlds
+
+      /data/valheim_server.x86_64 -name $SERVER_NAME -port $SERVER_PORT -world "Dedicated" -password $SERVER_PASSWORD -public 1

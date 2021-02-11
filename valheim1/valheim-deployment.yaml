@@ -1,0 +1,62 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: valheim1
+  labels:
+    app: valheim1
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: valheim1
+  template:
+    metadata:
+      labels:
+        app: valheim1
+    spec:
+      containers:
+      - image: steamcmd/steamcmd:latest
+        command: ["sh /valheim-config/start_server.sh"]
+        name: valheim-server
+        resources:
+          requests:
+            cpu: 1000m
+            memory: 4G
+        env:
+          # Server Parameters
+        - name: SERVER_PORT
+          value: "2456"  # Must be in quotes since it is meant as a value to put into an environment variable
+        - name: SERVER_NAME
+          value: KubicValheim
+        - name: SERVER_PASSWORD # Must be at least 5 characters long and must not contain the server name
+          valueFrom:
+            secretKeyRef:
+              name: valheim-secrets
+              key: serverPass
+        ports:
+          - name: valheim1-port1
+            containerPort: 2456
+            protocol: UDP
+          - name: valheim1-port1
+            containerPort: 2457
+            protocol: UDP
+        volumeMounts:
+        - name: valheim-persistent-storage
+          mountPath: /data
+        - name: valheim-config-volume
+          mountPath: /valheim-config
+        lifecycle:
+          preStop:
+            exec:
+              command: [ " echo","1",">","/data/server_exit.drp" ]
+      volumes:
+      - name: valheim-persistent-storage
+        persistentVolumeClaim:
+          claimName: valheim1-pv-claim
+      - name: valheim-config-volume
+        projected:
+          sources:
+          - configMap:
+              name: valheim-player-lists-cm
+          - configMap:
+              name: valheim-startup-script-cm
