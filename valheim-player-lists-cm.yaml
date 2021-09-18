@@ -6,7 +6,7 @@ data:
   # 76561198030942091 = Cervator
   adminlist.txt: |-
       76561198030942091
-  bannedlist: |-
+  bannedlist.txt: |-
       // Not banned: 76561198030942091
-  permittedlist: |-
+  permittedlist.txt: |-
       76561198030942091
