@@ -7,6 +7,6 @@ data:
   adminlist.txt: |-
       76561198030942091
   bannedlist.txt: |-
-      // Not banned: 76561198030942091
+      // Add entries here for banned players, or just use the permitted list
   permittedlist.txt: |-
-      76561198030942091
+      // Any live entry here will make every non-listed player count as banned
