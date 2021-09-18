@@ -20,7 +20,7 @@ spec:
           image: busybox:1.28
           command: [ 'sh', '-c' ]
           args:
-            - mkdir -p /home/steam/.config/unity3d/IronGate/Valheim
+            - mkdir -p /home/steam/.config/unity3d/IronGate/Valheim;
               cp /valheim-config/adminlist.txt  /home/steam/.config/unity3d/IronGate/Valheim/adminlist.txt;
               cp /valheim-config/bannedlist.txt  /home/steam/.config/unity3d/IronGate/Valheim/bannedlist.txt;
               cp /valheim-config/permittedlist.txt  /home/steam/.config/unity3d/IronGate/Valheim/permittedlist.txt;
@@ -51,7 +51,7 @@ spec:
         - name: AUTO_BACKUP
           value: "1"
         - name: AUTO_BACKUP_SCHEDULE
-          value: "*/1 * * * *"
+          value: "*/15 * * * *"
         - name: AUTO_BACKUP_REMOVE_OLD
           value: "1"
         - name: AUTO_BACKUP_DAYS_TO_LIVE
