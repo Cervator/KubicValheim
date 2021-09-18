@@ -6,6 +6,8 @@ An eventual goal is to include automatic server hibernation to keep hosting cost
 
 Uses the [Docker image](https://hub.docker.com/r/mbround18/valheim) from https://github.com/mbround18/valheim-docker
 
+TODO: Check out https://hub.docker.com/r/lloesche/valheim-server as well - maybe more options/logging? Need some way to get count of players online
+
 Is part of the [Kubic game server hosting](https://github.com/Cervator/KubicGameHosting) series started with https://github.com/Cervator/KubicArk and https://github.com/Cervator/KubicTerasology
 
 
@@ -40,6 +42,14 @@ After initial config and provisioning you can change the CMs either via files or
 ## Connecting to your server
 
 Find an IP to one of your cluster nodes (the longer lived the better) by using `kubectl get nodes -o wide`, then add the right port from your server set, for instance `31457` (the "+1" port) for valheim1 `[IP]:[port]` then add that to the Steam server browser. The server generally comes online pretty fast but crashes easily, you can watch it with `kubectl logs <server-name>-<gibberish>` (adjust accordingly to your pod name, seen with `kubectl get pods`)
+
+
+## Taking backups
+
+You can take backups by either snapshotting the disk that's backing the Valheim persistent volume, copying the game files, or both. For instance in a terminal with `kubectl` configured, with the name of the Valheim pod handy, and in a directory you want to download the files to:
+
+* `kubectl cp valheim1-64b954b5b-jmtmc:/home/steam/.config/unity3d/IronGate/Valheim/worlds/Dedicated.db Dedicated.db`
+* `kubectl cp valheim1-64b954b5b-jmtmc:/home/steam/.config/unity3d/IronGate/Valheim/worlds/Dedicated.fwl Dedicated.fwl`
 
 
 ## License

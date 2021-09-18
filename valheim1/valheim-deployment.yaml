@@ -14,17 +14,33 @@ spec:
       labels:
         app: valheim1
     spec:
+      # Use an init container to help prepare some config files before the main container starts
+      initContainers:
+        - name: kubic-valheim-prep-container
+          image: busybox:1.28
+          command: [ 'sh', '-c' ]
+          args:
+            - mkdir -p /home/steam/.config/unity3d/IronGate/Valheim
+              cp /valheim-config/adminlist.txt  /home/steam/.config/unity3d/IronGate/Valheim/adminlist.txt;
+              cp /valheim-config/bannedlist.txt  /home/steam/.config/unity3d/IronGate/Valheim/bannedlist.txt;
+              cp /valheim-config/permittedlist.txt  /home/steam/.config/unity3d/IronGate/Valheim/permittedlist.txt;
+          volumeMounts:
+            - name: valheim-persistent-storage
+              mountPath: /home/steam/.config/unity3d/IronGate/Valheim
+            - name: valheim-config-volume
+              mountPath: /valheim-config
+      # Main container actually runs the game server
       containers:
       - image: mbround18/valheim:latest
         name: valheim-server
         resources:
           requests:
             cpu: 1000m
-            memory: 4G
+            memory: 5G
         env:
           # Server Parameters
         - name: NAME
-          value: KubicValheim
+          value: KubicValheim2
         - name: PORT
           value: "31456"  # Must be in quotes since it is meant as a value to put into an environment variable
         - name: PASSWORD # Must be at least 5 characters long and must not contain the server name
@@ -32,6 +48,14 @@ spec:
             secretKeyRef:
               name: valheim-secrets
               key: serverPass
+        - name: AUTO_BACKUP
+          value: "1"
+        - name: AUTO_BACKUP_SCHEDULE
+          value: "*/1 * * * *"
+        - name: AUTO_BACKUP_REMOVE_OLD
+          value: "1"
+        - name: AUTO_BACKUP_DAYS_TO_LIVE
+          value: "8"
         ports:
           - name: valheim1-port1
             containerPort: 31456
@@ -47,6 +71,8 @@ spec:
           mountPath: /home/steam/.config/unity3d/IronGate/Valheim
         - name: valheim-config-volume
           mountPath: /valheim-config
+        - name: valheim1-shared-data
+          mountPath: /home/steam/backups
       volumes:
       - name: valheim-persistent-storage
         persistentVolumeClaim:
@@ -56,3 +82,6 @@ spec:
           sources:
           - configMap:
               name: valheim-player-lists-cm
+      - name: valheim1-shared-data
+        persistentVolumeClaim:
+          claimName: ark-shared-pv-claim

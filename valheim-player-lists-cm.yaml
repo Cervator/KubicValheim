@@ -3,9 +3,10 @@ kind: ConfigMap
 metadata:
   name: valheim-player-lists-cm
 data:
+  # 76561198030942091 = Cervator
   adminlist.txt: |-
-      SomePlayerNameOrSteamId
+      76561198030942091
   bannedlist: |-
-      SomePlayerNameOrSteamId
+      // Not banned: 76561198030942091
   permittedlist: |-
-      SomePlayerNameOrSteamId
+      76561198030942091
