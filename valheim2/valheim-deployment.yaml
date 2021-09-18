@@ -1,18 +1,18 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: valheim1
+  name: valheim2
   labels:
-    app: valheim1
+    app: valheim2
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: valheim1
+      app: valheim2
   template:
     metadata:
       labels:
-        app: valheim1
+        app: valheim2
     spec:
       # Use an init container to help prepare some config files before the main container starts
       initContainers:
@@ -40,9 +40,9 @@ spec:
         env:
           # Server Parameters
         - name: NAME
-          value: KubicValheim
+          value: KubicValheim2
         - name: PORT
-          value: "31456"  # Must be in quotes since it is meant as a value to put into an environment variable
+          value: "31466"  # Must be in quotes since it is meant as a value to put into an environment variable
         - name: PASSWORD # Must be at least 5 characters long and must not contain the server name
           valueFrom:
             secretKeyRef:
@@ -57,31 +57,31 @@ spec:
         - name: AUTO_BACKUP_DAYS_TO_LIVE
           value: "8"
         ports:
-          - name: valheim1-port1
-            containerPort: 31456
+          - name: valheim2-port1
+            containerPort: 31466
             protocol: UDP
-          - name: valheim1-port2
-            containerPort: 31457
+          - name: valheim2-port2
+            containerPort: 31467
             protocol: UDP
-          - name: valheim1-port3
-            containerPort: 31458
+          - name: valheim2-port3
+            containerPort: 31468
             protocol: UDP
         volumeMounts:
         - name: valheim-persistent-storage
           mountPath: /home/steam/.config/unity3d/IronGate/Valheim
         - name: valheim-config-volume
           mountPath: /valheim-config
-        - name: valheim1-shared-data
+        - name: valheim-shared-data
           mountPath: /home/steam/backups
       volumes:
       - name: valheim-persistent-storage
         persistentVolumeClaim:
-          claimName: valheim1-pv-claim
+          claimName: valheim2-pv-claim
       - name: valheim-config-volume
         projected:
           sources:
           - configMap:
               name: valheim-player-lists-cm
-      - name: valheim1-shared-data
+      - name: valheim-shared-data
         persistentVolumeClaim:
           claimName: ark-shared-pv-claim
