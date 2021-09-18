@@ -84,4 +84,4 @@ spec:
               name: valheim-player-lists-cm
       - name: valheim1-shared-data
         persistentVolumeClaim:
-          claimName: ark-shared-pv-claim
+          claimName: valheim-shared-pv-claim

@@ -4,6 +4,7 @@ then
   echo "Going to work with the Valheim server $1";
   kubectl create ns valheim
   kubectl apply -f $1/valheim-pvc.yaml -n valheim
+  kubectl apply -f valheim-pvc-shared.yaml -n valheim
   kubectl apply -f valheim-player-lists-cm.yaml -n valheim
   echo "Hope you remembered to update the passwords in the secrets file only locally!"
   kubectl apply -f valheim-secrets.yaml -n valheim
