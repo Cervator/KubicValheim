@@ -35,8 +35,8 @@ spec:
         name: valheim-server
         resources:
           requests:
-            cpu: 1000m
-            memory: 5G
+            cpu: 300m
+            memory: 6G
         env:
           # Server Parameters
         - name: NAME
