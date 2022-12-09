@@ -33,6 +33,12 @@ To easily configure a given Valheim server via Git without touching the server s
 * `bannedlist.txt` - players to prevent from connecting
 * `permittedlist.txt` - players to allow connecting on a non-public server
 
+One thing you need to configure inside a deployment instead is if you want to run with the Beta release, if one is live on Steam. Add a new environment variable to the normal section like so:
+
+```
+        - name: USE_PUBLIC_BETA
+          value: "1"
+```
 
 ### Making changes
 
@@ -51,6 +57,34 @@ You can take backups by either snapshotting the disk that's backing the Valheim 
 * `kubectl cp valheim1-64b954b5b-jmtmc:/home/steam/.config/unity3d/IronGate/Valheim/worlds/Dedicated.db Dedicated.db`
 * `kubectl cp valheim1-64b954b5b-jmtmc:/home/steam/.config/unity3d/IronGate/Valheim/worlds/Dedicated.fwl Dedicated.fwl`
 
+Another approach that's particularly helpful if you are juggling multiple servers and leave some offline and don't want to bring a game world live just to be able to get to the files normally is instead just using a utility pod mapped to just the persistent volume. Example:
+
+```datapod.yml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: my-pod
+spec:
+  containers:
+  - name: my-container
+    image: busybox
+    command:
+      - sleep
+      - "3600"
+    volumeMounts:
+    - name: my-volume
+      mountPath: /valheim1
+  volumes:
+  - name: my-volume
+    persistentVolumeClaim:
+      claimName: valheim1-pv-claim
+```
+
+* `kubectl apply -f datapod.yml` - create a pod using the above definition that'll mount the Valheim volume to `/valheim1`
+* `kubectl cp my-pod:/valheim1/worlds/Dedicated.db Dedicated.db` - download the main world file
+* `kubectl cp my-pod:/valheim1/worlds/Dedicated.fwl Dedicated.fwl` - download the other one
+* `zip valheim1-2022-06-17.zip Dedicated.*` - zip them up into a single file
+* `gsutil cp *.zip gs://game-server-backups/valheim/valheim1-2022-06-17` - upload them to a target Google Cloud Storage Bucket (must be created separately first and made public if desired)
 
 ## License
 
