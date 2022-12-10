@@ -56,8 +56,6 @@ spec:
           value: "1"
         - name: AUTO_BACKUP_DAYS_TO_LIVE
           value: "8"
-        - name: USE_PUBLIC_BETA
-          value: "1"
         ports:
           - name: valheim2-port1
             containerPort: 31466
