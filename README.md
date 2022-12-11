@@ -86,6 +86,12 @@ spec:
 * `zip valheim1-2022-06-17.zip Dedicated.*` - zip them up into a single file
 * `gsutil cp *.zip gs://game-server-backups/valheim/valheim1-2022-06-17` - upload them to a target Google Cloud Storage Bucket (must be created separately first and made public if desired)
 
+## Restoring backups
+
+You simply need to get the two world files from your desired backkup into the directory they normally live in - noting that for this specific setup the world file names will be "Dedicated" (as that is the designated world of the name as per config here). Have not tried figuring out the _easiest_ way yet to do this in Kubernetes, although the above approach should work in reverse.
+
+Running a game _locally_ can be a little trickier as Valheim runs with worlds saved in the Steam cloud saves system by default, so the local directory may not exist. On a fairly modern instance of Windows the files should be placed at something like `C:\Users\[USERNAME]\AppData\LocalLow\IronGate\Valheim\worlds_local\` (naturally replacing "USERNAME" with your OS user) - files placed here should become visible in the worlds list even with cloud saves on.
+
 ## License
 
 This project is licensed under Apache v2.0 with contributions and forks welcome. The [Docker Image](https://github.com/mbround18/valheim-docker) used is licensed as per its project descriptions.
