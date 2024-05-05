@@ -15,4 +15,4 @@ spec:
   volumes:
   - name: my-volume
     persistentVolumeClaim:
-      claimName: valheim6-pv-claim
+      claimName: valheim3-pv-claim

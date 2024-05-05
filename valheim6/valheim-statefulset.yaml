@@ -5,18 +5,18 @@ metadata:
   labels:
     # Labels to tie the StatefulSet uniquely to just its pod, while using a common label for using a single LB
     server: valheim-6
-    game-lb: kgh-lb
+    game-lb: kgs-lb
 spec:
   replicas: 1
   selector:
     matchLabels:
       server: valheim-6
-      game-lb: kgh-lb
+      game-lb: kgs-lb
   template:
     metadata:
       labels:
         server: valheim-6
-        game-lb: kgh-lb
+        game-lb: kgs-lb
     spec:
       # Use an init container to help prepare some config files before the main container starts
       initContainers:
@@ -46,7 +46,7 @@ spec:
         - name: NAME
           value: KubicValheim6
         - name: PORT
-          value: "31526"  # Must be in quotes since it is meant as a value to put into an environment variable
+          value: "31666"  # Must be in quotes since it is meant as a value to put into an environment variable
         - name: PASSWORD # Must be at least 5 characters long and must not contain the server name
           valueFrom:
             secretKeyRef:
@@ -66,13 +66,13 @@ spec:
           value: playerevents
         ports:
           - name: valheim6-1
-            containerPort: 31526
+            containerPort: 31666
             protocol: UDP
           - name: valheim6-2
-            containerPort: 31527
+            containerPort: 31667
             protocol: UDP
           - name: valheim6-3
-            containerPort: 31528
+            containerPort: 31668
             protocol: UDP
         volumeMounts:
         - name: valheim-persistent-storage
