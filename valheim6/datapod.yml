@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: my-pod
+spec:
+  containers:
+  - name: my-container
+    image: busybox
+    command:
+      - sleep
+      - "3600"
+    volumeMounts:
+    - name: my-volume
+      mountPath: /valheim1
+  volumes:
+  - name: my-volume
+    persistentVolumeClaim:
+      claimName: valheim6-pv-claim

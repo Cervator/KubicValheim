@@ -47,15 +47,16 @@ After initial config and provisioning you can change the CMs either via files or
 
 ## Connecting to your server
 
-Find an IP to one of your cluster nodes (the longer lived the better) by using `kubectl get nodes -o wide`, then add the right port from your server set, for instance `31457` (the "+1" port) for valheim1 `[IP]:[port]` then add that to the Steam server browser. The server generally comes online pretty fast but crashes easily, you can watch it with `kubectl logs <server-name>-<gibberish>` (adjust accordingly to your pod name, seen with `kubectl get pods`)
+The new way of connecting relies on a load balancer spun up by the separate KubicGameHosting repo, and for you to have updated your DNS to point a domain at the LB IP. See the other project for setup details. Simply connect to the domain at the right port, such as `31486`
 
+OLD WAY: Expose the stateful set with a NodePort service (can look in Git history for the old example). Find an IP to one of your cluster nodes (the longer lived the better) by using `kubectl get nodes -o wide`, then add the right port from your server set, for instance `31457` (the "+1" port) for valheim1 `[IP]:[port]` then add that to the Steam server browser. The server generally comes online pretty fast but crashes easily, you can watch it with `kubectl logs <server-name>-<gibberish>` (adjust accordingly to your pod name, seen with `kubectl get pods`)
 
 ## Taking backups
 
 You can take backups by either snapshotting the disk that's backing the Valheim persistent volume, copying the game files, or both. For instance in a terminal with `kubectl` configured, with the name of the Valheim pod handy, and in a directory you want to download the files to:
 
-* `kubectl cp valheim1-64b954b5b-jmtmc:/home/steam/.config/unity3d/IronGate/Valheim/worlds/Dedicated.db Dedicated.db`
-* `kubectl cp valheim1-64b954b5b-jmtmc:/home/steam/.config/unity3d/IronGate/Valheim/worlds/Dedicated.fwl Dedicated.fwl`
+* `kubectl cp valheim-server-4-0:/home/steam/.config/unity3d/IronGate/Valheim/worlds_local/Dedicated.db Dedicated.db -n kgh`
+* `kubectl cp valheim-server-4-0:/home/steam/.config/unity3d/IronGate/Valheim/worlds_local/Dedicated.fwl Dedicated.fwl -n kgh`
 
 Another approach that's particularly helpful if you are juggling multiple servers and leave some offline and don't want to bring a game world live just to be able to get to the files normally is instead just using a utility pod mapped to just the persistent volume. Example:
 
@@ -89,9 +90,23 @@ spec:
 
 ## Restoring backups
 
-You simply need to get the two world files from your desired backkup into the directory they normally live in - noting that for this specific setup the world file names will be "Dedicated" (as that is the designated world of the name as per config here). Have not tried figuring out the _easiest_ way yet to do this in Kubernetes, although the above approach should work in reverse.
+You simply need to get the two world files from your desired backkup into the directory they normally live in - noting that for this specific setup the world file names will be "Dedicated" (as that is the designated world of the name as per config here). Have not tried figuring out the _easiest_ way yet to do this in Kubernetes, although the above approach should work in reverse, like so:
+
+* `kubectl cp Dedicated.db valheim-server-4-0:/home/steam/.config/unity3d/IronGate/Valheim/worlds_local/Dedicated.db -n kgh`
+* `kubectl cp Dedicated.fwl valheim-server-4-0:/home/steam/.config/unity3d/IronGate/Valheim/worlds_local/Dedicated.fwl -n kgh`
 
 Running a game _locally_ can be a little trickier as Valheim runs with worlds saved in the Steam cloud saves system by default, so the local directory may not exist. On a fairly modern instance of Windows the files should be placed at something like `C:\Users\%USERNAME%\AppData\LocalLow\IronGate\Valheim\worlds_local\` (replace `%USERNAME%` with your OS user if it doesn't work automatically) - files placed here should become visible in the worlds list even with cloud saves on.
+
+### Preparing GCP buckets
+
+To make a storage bucket on Google Cloud Platform go to the Cloud Storage -> Buckets and create one. Do not prevent public access if the desire is to host backups anybody can download.
+
+Having the `gcloud` suite installed either locally or in a container image is handy (see for instance https://hub.docker.com/r/google/cloud-sdk) - when ready run `gcloud auth login`
+
+You may have to grant yourself access to the bucket for uploads and such, example: `gsutil iam ch user:rpraestholm@adaptavist.com:roles/storage.objectCreator gs://kgs-saves`
+
+Make the bucket public: `gsutil iam ch allUsers:objectViewer gs://kgs-saves`
+
 
 ## License
 

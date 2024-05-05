@@ -1,0 +1,91 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: valheim-server-5
+  labels:
+    # Labels to tie the StatefulSet uniquely to just its pod, while using a common label for using a single LB
+    server: valheim-5
+    game-lb: kgh-lb
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      server: valheim-5
+      game-lb: kgh-lb
+  template:
+    metadata:
+      labels:
+        server: valheim-5
+        game-lb: kgh-lb
+    spec:
+      # Use an init container to help prepare some config files before the main container starts
+      initContainers:
+        - name: kubic-valheim-prep-container
+          image: busybox:1.28
+          command: [ 'sh', '-c' ]
+          args:
+            - mkdir -p /home/steam/.config/unity3d/IronGate/Valheim;
+              cp /valheim-config/adminlist.txt  /home/steam/.config/unity3d/IronGate/Valheim/adminlist.txt;
+              cp /valheim-config/bannedlist.txt  /home/steam/.config/unity3d/IronGate/Valheim/bannedlist.txt;
+              cp /valheim-config/permittedlist.txt  /home/steam/.config/unity3d/IronGate/Valheim/permittedlist.txt;
+          volumeMounts:
+            - name: valheim-persistent-storage
+              mountPath: /home/steam/.config/unity3d/IronGate/Valheim
+            - name: valheim-config-volume
+              mountPath: /valheim-config
+      # Main container actually runs the game server
+      containers:
+      - image: mbround18/valheim:latest
+        name: valheim-server
+        resources:
+          requests:
+            cpu: 300m
+            memory: 6G
+        env:
+          # Server Parameters
+        - name: NAME
+          value: KubicValheim5
+        - name: PORT
+          value: "31496"  # Must be in quotes since it is meant as a value to put into an environment variable
+        - name: PASSWORD # Must be at least 5 characters long and must not contain the server name
+          valueFrom:
+            secretKeyRef:
+              name: valheim-secrets
+              key: serverPass
+        - name: AUTO_BACKUP
+          value: "1"
+        - name: AUTO_BACKUP_SCHEDULE
+          value: "*/15 * * * *"
+        - name: AUTO_BACKUP_REMOVE_OLD
+          value: "1"
+        - name: AUTO_BACKUP_DAYS_TO_LIVE
+          value: "8"
+        ports:
+          - name: valheim5-port1
+            containerPort: 31496
+            protocol: UDP
+          - name: valheim5-port2
+            containerPort: 31497
+            protocol: UDP
+          - name: valheim5-port3
+            containerPort: 31498
+            protocol: UDP
+        volumeMounts:
+        - name: valheim-persistent-storage
+          mountPath: /home/steam/.config/unity3d/IronGate/Valheim
+        - name: valheim-config-volume
+          mountPath: /valheim-config
+        #- name: valheim-shared-data
+        #  mountPath: /home/steam/backups
+      volumes:
+      - name: valheim-persistent-storage
+        persistentVolumeClaim:
+          claimName: valheim5-pv-claim
+      - name: valheim-config-volume
+        projected:
+          sources:
+          - configMap:
+              name: valheim-player-lists-cm
+      #- name: valheim-shared-data # TODO: Fix the NFS provisioner then re-enable
+      #  persistentVolumeClaim:
+      #    claimName: valheim-shared-pv-claim
