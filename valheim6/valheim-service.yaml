@@ -1,0 +1,26 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: valheim6-service
+  labels:
+    server: valheim-6
+spec:
+  type: NodePort
+  ports:
+    - name: port-1
+      nodePort: 31666
+      port: 31666
+      protocol: UDP
+      targetPort: 31666
+    - name: port-2
+      nodePort: 31667
+      port: 31667
+      protocol: UDP
+      targetPort: 31667
+    - name: port-3
+      nodePort: 31668
+      port: 31668
+      protocol: UDP
+      targetPort: 31668
+  selector:
+    server: valheim-6
