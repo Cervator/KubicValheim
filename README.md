@@ -55,8 +55,8 @@ OLD WAY: Expose the stateful set with a NodePort service (can look in Git histor
 
 You can take backups by either snapshotting the disk that's backing the Valheim persistent volume, copying the game files, or both. For instance in a terminal with `kubectl` configured, with the name of the Valheim pod handy, and in a directory you want to download the files to:
 
-* `kubectl cp valheim-server-4-0:/home/steam/.config/unity3d/IronGate/Valheim/worlds_local/Dedicated.db Dedicated.db -n kgh`
-* `kubectl cp valheim-server-4-0:/home/steam/.config/unity3d/IronGate/Valheim/worlds_local/Dedicated.fwl Dedicated.fwl -n kgh`
+* `kubectl cp valheim-server-3-0:/home/steam/.config/unity3d/IronGate/Valheim/worlds_local/Dedicated.db Dedicated.db -n kgs`
+* `kubectl cp valheim-server-3-0:/home/steam/.config/unity3d/IronGate/Valheim/worlds_local/Dedicated.fwl Dedicated.fwl -n kgs`
 
 Another approach that's particularly helpful if you are juggling multiple servers and leave some offline and don't want to bring a game world live just to be able to get to the files normally is instead just using a utility pod mapped to just the persistent volume. Example:
 

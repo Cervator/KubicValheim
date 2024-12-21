@@ -1,0 +1,3 @@
+This backup appears to work locally after "generating" the map, which really seems to be more about converting it to the latest. However, it is one of the older ones which for sure lost some progress (Cerv's mountain castle went back to "nearly entirely sad ruin" from "slightly restored but still kinda said semi-ruin") but there are others with worse loss or outright corruption.
+
+Uncertain if this map used for a server and left online will result in a corrupt map again, that happened at least once with some sort of backup.
