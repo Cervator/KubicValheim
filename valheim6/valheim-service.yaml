@@ -2,8 +2,6 @@ apiVersion: v1
 kind: Service
 metadata:
   name: valheim6-service
-  labels:
-    server: valheim-6
 spec:
   type: NodePort
   ports:

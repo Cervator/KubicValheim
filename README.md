@@ -90,7 +90,7 @@ spec:
 
 ## Restoring backups
 
-You simply need to get the two world files from your desired backkup into the directory they normally live in - noting that for this specific setup the world file names will be "Dedicated" (as that is the designated world of the name as per config here). Have not tried figuring out the _easiest_ way yet to do this in Kubernetes, although the above approach should work in reverse, like so:
+You simply need to get the two world files from your desired backup into the directory they normally live in - noting that for this specific setup the world file names will be "Dedicated" (as that is the designated world of the name as per config here). Have not tried figuring out the _easiest_ way yet to do this in Kubernetes, although the above approach should work in reverse, like so:
 
 * `kubectl cp Dedicated.db valheim-server-4-0:/home/steam/.config/unity3d/IronGate/Valheim/worlds_local/Dedicated.db -n kgh`
 * `kubectl cp Dedicated.fwl valheim-server-4-0:/home/steam/.config/unity3d/IronGate/Valheim/worlds_local/Dedicated.fwl -n kgh`

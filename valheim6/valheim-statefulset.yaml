@@ -40,7 +40,10 @@ spec:
         resources:
           requests:
             cpu: 300m
-            memory: 6G
+            memory: 2.5Gi
+          limits:
+            cpu: 1
+            memory: 5Gi
         env:
           # Server Parameters
         - name: NAME

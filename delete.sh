@@ -2,7 +2,7 @@
 if [ $# -eq 1 ]
 then
   echo "Going to delete the Valheim server $1";
-  kubectl delete -f $1/valheim-deployment.yaml  -n valheim
+  kubectl delete -f $1/valheim-statefulset.yaml  -n valheim
   kubectl delete -f valheim-player-lists-cm.yaml -n valheim
   kubectl delete -f valheim-secrets.yaml -n valheim
   kubectl delete -f $1/valheim-service.yaml -n valheim

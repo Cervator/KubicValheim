@@ -9,9 +9,9 @@ then
   echo "Hope you remembered to update the passwords in the secrets file only locally!"
   kubectl apply -f valheim-secrets.yaml -n valheim
   kubectl apply -f $1/valheim-service.yaml -n valheim
-  kubectl apply -f $1/valheim-deployment.yaml -n valheim
+  kubectl apply -f $1/valheim-statefulset.yaml -n valheim
   # TODO: Consider using a stateful set just to get a cleaner pod name? Only ever 0 or 1 instances ...
 else
   echo "Didn't get exactly one arg, got $# ! $*"
-  echo "Valid server names are: valheim1, valheim2"
+  echo "Valid server names are: valheim1 through 6"
 fi
