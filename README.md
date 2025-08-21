@@ -24,6 +24,7 @@ As the exposing of servers happen using a NodePort you need to manually add a fi
 
 *Note:* There are placeholder passwords in `valheim-secrets.yaml` - you'll want to update these _but only locally where you run `kubectl` from_ - don't check your passwords into Git!
 
+If you're curious what version your Valheim server pod is running try the following: `kubectl logs -n valheim $(kubectl get pods -n valheim -o jsonpath='{.items[0].metadata.name}') | grep "Valheim version" | sed 's/.*Valheim version: //'`
 
 ## Configuration files
 
